@@ -1,4 +1,4 @@
-package com.github.michaelnestler.spectral.gradle.util
+package io.github.michaelnestler.spectral.gradle.util
 
 import org.gradle.nativeplatform.platform.internal.DefaultOperatingSystem
 import java.nio.file.Path

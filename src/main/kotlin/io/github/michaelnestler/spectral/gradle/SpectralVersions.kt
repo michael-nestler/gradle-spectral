@@ -1,4 +1,4 @@
-package com.github.michaelnestler.spectral.gradle
+package io.github.michaelnestler.spectral.gradle
 
 const val latest = "latest"
 

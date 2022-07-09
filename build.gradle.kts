@@ -1,7 +1,8 @@
 plugins {
-    `java-gradle-plugin`
     kotlin("jvm") version "1.7.10"
     kotlin("plugin.serialization") version "1.7.10"
+    id("com.gradle.plugin-publish") version "1.0.0"
+    id("fr.brouillard.oss.gradle.jgitver") version "0.9.1"
     id("com.diffplug.spotless") version "6.8.0"
 }
 
@@ -56,11 +57,23 @@ testing {
     }
 }
 
+pluginBundle {
+    website = "https://github.com/michael-nestler/gradle-spectral"
+    vcsUrl = "https://github.com/michael-nestler/gradle-spectral.git"
+    tags = listOf("openapi", "swagger", "lint")
+}
+
 gradlePlugin {
     val spectral by plugins.creating {
-        id = "com.github.michaelnestler.spectral"
-        implementationClass = "com.github.michaelnestler.spectral.gradle.GradleSpectralPlugin"
+        id = "io.github.michael-nestler.spectral"
+        displayName = "Gradle Spectral"
+        description = "Lint your OpenAPI docs with Spectral"
+        implementationClass = "io.github.michaelnestler.spectral.gradle.GradleSpectralPlugin"
     }
+}
+
+jgitver {
+    nonQualifierBranches = "main"
 }
 
 gradlePlugin.testSourceSets(sourceSets["functionalTest"])
@@ -77,3 +90,5 @@ spotless {
 tasks.check {
     dependsOn(testing.suites.named("functionalTest"))
 }
+
+group = "io.github.michael-nestler"

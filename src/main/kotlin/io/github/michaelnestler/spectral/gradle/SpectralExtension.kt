@@ -1,4 +1,4 @@
-package com.github.michaelnestler.spectral.gradle
+package io.github.michaelnestler.spectral.gradle
 
 import org.gradle.api.file.FileCollection
 import org.gradle.api.file.RegularFileProperty

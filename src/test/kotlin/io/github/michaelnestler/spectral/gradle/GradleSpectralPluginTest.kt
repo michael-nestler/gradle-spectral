@@ -1,4 +1,4 @@
-package com.github.michaelnestler.spectral.gradle
+package io.github.michaelnestler.spectral.gradle
 
 import org.gradle.testfixtures.ProjectBuilder
 import kotlin.test.Test
@@ -8,7 +8,7 @@ class GradleSpectralPluginTest {
     @Test
     fun `plugin registers task`() {
         val project = ProjectBuilder.builder().build()
-        project.plugins.apply("com.github.michaelnestler.spectral")
+        project.plugins.apply("io.github.michael-nestler.spectral")
 
         assertNotNull(project.tasks.findByName("spectral"))
     }

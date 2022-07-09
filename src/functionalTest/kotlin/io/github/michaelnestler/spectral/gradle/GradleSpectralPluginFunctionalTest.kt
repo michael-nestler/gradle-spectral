@@ -1,4 +1,4 @@
-package com.github.michaelnestler.spectral.gradle
+package io.github.michaelnestler.spectral.gradle
 
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.jupiter.api.Disabled
@@ -24,7 +24,7 @@ class GradleSpectralPluginFunctionalTest {
         buildFile.writeText(
             """
             plugins {
-                id('com.github.michaelnestler.spectral')
+                id('io.github.michael-nestler.spectral')
             }
             """.trimIndent()
         )
@@ -52,7 +52,7 @@ class GradleSpectralPluginFunctionalTest {
         buildFile.writeText(
             """
             plugins {
-                id('com.github.michaelnestler.spectral')
+                id('io.github.michael-nestler.spectral')
             }
             
             spectral {
@@ -83,7 +83,7 @@ class GradleSpectralPluginFunctionalTest {
         buildFile.writeText(
             """
             plugins {
-                id('com.github.michaelnestler.spectral')
+                id('io.github.michael-nestler.spectral')
             }
             
             spectral {
@@ -121,7 +121,7 @@ class GradleSpectralPluginFunctionalTest {
         buildFile.writeText(
             """
             plugins {
-                id('com.github.michaelnestler.spectral')
+                id('io.github.michael-nestler.spectral')
             }
             
             spectral {
@@ -146,7 +146,7 @@ class GradleSpectralPluginFunctionalTest {
         buildFile.writeText(
             """
             plugins {
-                id('com.github.michaelnestler.spectral')
+                id('io.github.michael-nestler.spectral')
             }
             
             spectral {
@@ -177,7 +177,7 @@ class GradleSpectralPluginFunctionalTest {
         buildFile.writeText(
             """
             plugins {
-                id('com.github.michaelnestler.spectral')
+                id('io.github.michael-nestler.spectral')
             }
             
             spectral {
@@ -210,7 +210,7 @@ class GradleSpectralPluginFunctionalTest {
         buildFile.writeText(
             """
             plugins {
-                id('com.github.michaelnestler.spectral')
+                id('io.github.michael-nestler.spectral')
             }
             
             spectral {

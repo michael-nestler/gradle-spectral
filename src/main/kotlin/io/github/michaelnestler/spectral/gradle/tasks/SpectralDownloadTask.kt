@@ -1,11 +1,11 @@
-package com.github.michaelnestler.spectral.gradle.tasks
+package io.github.michaelnestler.spectral.gradle.tasks
 
-import com.github.michaelnestler.spectral.gradle.latest
-import com.github.michaelnestler.spectral.gradle.normalize
-import com.github.michaelnestler.spectral.gradle.util.Linux
-import com.github.michaelnestler.spectral.gradle.util.Mac
-import com.github.michaelnestler.spectral.gradle.util.Windows
-import com.github.michaelnestler.spectral.gradle.util.currentOs
+import io.github.michaelnestler.spectral.gradle.latest
+import io.github.michaelnestler.spectral.gradle.normalize
+import io.github.michaelnestler.spectral.gradle.util.Linux
+import io.github.michaelnestler.spectral.gradle.util.Mac
+import io.github.michaelnestler.spectral.gradle.util.Windows
+import io.github.michaelnestler.spectral.gradle.util.currentOs
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json

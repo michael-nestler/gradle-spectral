@@ -1,8 +1,8 @@
-package com.github.michaelnestler.spectral.gradle
+package io.github.michaelnestler.spectral.gradle
 
-import com.github.michaelnestler.spectral.gradle.tasks.SpectralDownloadTask
-import com.github.michaelnestler.spectral.gradle.util.Windows
-import com.github.michaelnestler.spectral.gradle.util.currentOs
+import io.github.michaelnestler.spectral.gradle.tasks.SpectralDownloadTask
+import io.github.michaelnestler.spectral.gradle.util.Windows
+import io.github.michaelnestler.spectral.gradle.util.currentOs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.file.RegularFile
