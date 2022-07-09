@@ -10,6 +10,6 @@ class GradleSpectralPluginTest {
         val project = ProjectBuilder.builder().build()
         project.plugins.apply("com.github.michaelnestler.spectral")
 
-        assertNotNull(project.tasks.findByName("greeting"))
+        assertNotNull(project.tasks.findByName("spectral"))
     }
 }

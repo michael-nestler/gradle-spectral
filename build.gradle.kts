@@ -13,6 +13,12 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
 }
 
+kotlin {
+    jvmToolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
+}
+
 testing {
     suites {
         val test by getting(JvmTestSuite::class) {
@@ -33,7 +39,17 @@ testing {
 
             targets {
                 all {
-                    testTask.configure { shouldRunAfter(test) }
+                    testTask.configure {
+                        useJUnitPlatform {
+                            if (System.getenv("PATH_TO_SPECTRAL") == null) {
+                                excludeTags("local")
+                            }
+                            if (System.getenv("RUN_PATH_TEST") == null) {
+                                excludeTags("path")
+                            }
+                        }
+                        shouldRunAfter(test)
+                    }
                 }
             }
         }
