@@ -54,6 +54,10 @@ class GradleSpectralPluginFunctionalTest {
             plugins {
                 id('com.github.michaelnestler.spectral')
             }
+            
+            spectral {
+                documents.set(files("openapi.yaml"))
+            }
             """.trimIndent()
         )
         projectDir.resolve("openapi.yaml").writeText(
@@ -80,6 +84,10 @@ class GradleSpectralPluginFunctionalTest {
             """
             plugins {
                 id('com.github.michaelnestler.spectral')
+            }
+            
+            spectral {
+                documents.set(files("openapi.yaml"))
             }
             """.trimIndent()
         )
@@ -118,6 +126,7 @@ class GradleSpectralPluginFunctionalTest {
             
             spectral {
                 version.set("6.4.0")
+                documents.set(files("openapi.yaml"))
             }
             """.trimIndent()
         )
@@ -142,6 +151,7 @@ class GradleSpectralPluginFunctionalTest {
             
             spectral {
                 version.set("6.4.1")
+                documents.set(files("openapi.yaml"))
             }
             """.trimIndent()
         )
@@ -173,6 +183,7 @@ class GradleSpectralPluginFunctionalTest {
             spectral {
                 download.set(false)
                 binary.set(file("$spectralPath"))
+                documents.set(files("openapi.yaml"))
             }
             """.trimIndent()
         )
@@ -204,6 +215,7 @@ class GradleSpectralPluginFunctionalTest {
             
             spectral {
                 download.set(false)
+                documents.set(files("openapi.yaml"))
             }
             """.trimIndent()
         )

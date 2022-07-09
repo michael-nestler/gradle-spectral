@@ -24,6 +24,11 @@ class GradleSpectralPlugin : Plugin<Project> {
         }
 
         project.tasks.register("spectral", Exec::class.java) { task ->
+            if (!extension.documents.isPresent) {
+                println("Set spectral.documents in order to lint your OpenAPI documents")
+                task.enabled = false
+                return@register
+            }
             if (extension.download.get()) {
                 task.dependsOn(spectralDownload)
                 task.executable(spectralDownload.get().binary.get().asFile.absolutePath)
@@ -53,7 +58,7 @@ class GradleSpectralPlugin : Plugin<Project> {
                 }
                 ruleset.asFile.absolutePath
             }
-            task.args("lint", "openapi.yaml", "--ruleset", rulesetPath)
+            task.args(listOf("lint", "--ruleset", rulesetPath) + extension.documents.get().map { it.absolutePath })
         }
     }
 
