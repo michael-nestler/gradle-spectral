@@ -16,6 +16,13 @@ class GradleSpectralPlugin : Plugin<Project> {
         val extension = project.extensions.create("spectral", SpectralExtension::class.java)
         extension.download.convention(true)
         extension.version.convention(latest)
+        extension.reports {
+            junit {
+                enabled.convention(true)
+                reportFile.convention(project.layout.buildDirectory.file("test-results/spectral/spectral.xml"))
+            }
+            stylish.convention(true)
+        }
 
         val spectralDownload = project.tasks.register("spectralDownload", SpectralDownloadTask::class.java) { task ->
             task.group = "verification"
@@ -24,7 +31,7 @@ class GradleSpectralPlugin : Plugin<Project> {
         }
 
         project.tasks.register("spectral", Exec::class.java) { task ->
-            if (!extension.documents.isPresent) {
+            if (extension.documents.isEmpty) {
                 println("Set spectral.documents in order to lint your OpenAPI documents")
                 task.enabled = false
                 return@register
@@ -58,7 +65,16 @@ class GradleSpectralPlugin : Plugin<Project> {
                 }
                 ruleset.asFile.absolutePath
             }
-            task.args(listOf("lint", "--ruleset", rulesetPath) + extension.documents.get().map { it.absolutePath })
+            val formatOptions = mutableListOf<String>()
+            if (extension.reports.junit.enabled.get()) {
+                formatOptions.add("--format=junit")
+                formatOptions.add("--output.junit=${extension.reports.junit.reportFile.get().asFile.absolutePath}")
+                extension.reports.junit.reportFile.get().asFile.parentFile.mkdirs()
+            }
+            if (extension.reports.stylish.get()) {
+                formatOptions.add("--format=stylish")
+            }
+            task.args(listOf("lint", "--ruleset", rulesetPath) + formatOptions + extension.documents.map { it.absolutePath })
         }
     }
 
