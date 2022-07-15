@@ -57,7 +57,8 @@ spectral {
 ## Gradle compatibility
 
 This plugin is only kept up-to-date with the newest version of Gradle on a personal on-demand basis.
-If you need a specific version supported, I recommend you fork this repository for your organization.
+Additionally, this plugin is being built with Java 17 for the foreseeable future.
+If you need a specific Java or Gradle version supported, I recommend you fork this repository for your organization.
 
 ## Contributing
 
