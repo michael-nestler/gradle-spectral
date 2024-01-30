@@ -15,7 +15,7 @@ class GradleSpectralPlugin : Plugin<Project> {
     override fun apply(project: Project) {
         val extension = project.extensions.create("spectral", SpectralExtension::class.java)
         extension.download.convention(true)
-        extension.version.convention(latest)
+        extension.version.convention(LATEST)
         extension.reports {
             junit {
                 enabled.convention(true)
@@ -24,11 +24,12 @@ class GradleSpectralPlugin : Plugin<Project> {
             stylish.convention(true)
         }
 
-        val spectralDownload = project.tasks.register("spectralDownload", SpectralDownloadTask::class.java) { task ->
-            task.group = "verification"
-            task.version.set(extension.version)
-            task.binary.convention(project.layout.projectDirectory.file(".gradle/spectral/spectral${suffix()}"))
-        }
+        val spectralDownload =
+            project.tasks.register("spectralDownload", SpectralDownloadTask::class.java) { task ->
+                task.group = "verification"
+                task.version.set(extension.version)
+                task.binary.convention(project.layout.projectDirectory.file(".gradle/spectral/spectral${suffix()}"))
+            }
 
         project.tasks.register("spectral", Exec::class.java) { task ->
             if (extension.documents.isEmpty) {
@@ -52,19 +53,20 @@ class GradleSpectralPlugin : Plugin<Project> {
                 }
             }
             val ruleset = extension.ruleset.orNull
-            val rulesetPath = if (ruleset == null) {
-                val config = Files.createTempFile("spectral-config", ".json")
-                config.toFile().deleteOnExit()
-                task.doFirst {
-                    config.writeText("{\"extends\": [\"spectral:oas\", \"spectral:asyncapi\"]\n}\n")
+            val rulesetPath =
+                if (ruleset == null) {
+                    val config = Files.createTempFile("spectral-config", ".json")
+                    config.toFile().deleteOnExit()
+                    task.doFirst {
+                        config.writeText("{\"extends\": [\"spectral:oas\", \"spectral:asyncapi\"]\n}\n")
+                    }
+                    config.absolutePathString()
+                } else {
+                    if (!ruleset.asFile.isFile) {
+                        throw IllegalArgumentException("Not a file: $ruleset")
+                    }
+                    ruleset.asFile.absolutePath
                 }
-                config.absolutePathString()
-            } else {
-                if (!ruleset.asFile.isFile) {
-                    throw IllegalArgumentException("Not a file: $ruleset")
-                }
-                ruleset.asFile.absolutePath
-            }
             val formatOptions = mutableListOf<String>()
             if (extension.reports.junit.enabled.get()) {
                 formatOptions.add("--format=junit")

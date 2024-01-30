@@ -1,9 +1,9 @@
 plugins {
-    kotlin("jvm") version "1.7.10"
-    kotlin("plugin.serialization") version "1.7.10"
-    id("com.gradle.plugin-publish") version "1.0.0"
+    kotlin("jvm") version "1.9.22"
+    kotlin("plugin.serialization") version "1.9.22"
+    id("com.gradle.plugin-publish") version "1.2.1"
     id("fr.brouillard.oss.gradle.jgitver") version "0.9.1"
-    id("com.diffplug.spotless") version "6.8.0"
+    id("com.diffplug.spotless") version "6.25.0"
 }
 
 repositories {
@@ -34,7 +34,7 @@ testing {
             useJUnitJupiter()
 
             dependencies {
-                implementation(project)
+                implementation(project())
                 implementation("org.jetbrains.kotlin:kotlin-test-junit5")
             }
 
@@ -57,18 +57,15 @@ testing {
     }
 }
 
-pluginBundle {
+gradlePlugin {
     website = "https://github.com/michael-nestler/gradle-spectral"
     vcsUrl = "https://github.com/michael-nestler/gradle-spectral.git"
-    tags = listOf("openapi", "swagger", "lint")
-}
-
-gradlePlugin {
     val spectral by plugins.creating {
         id = "io.github.michael-nestler.spectral"
         displayName = "Gradle Spectral"
         description = "Lint your OpenAPI docs with Spectral"
         implementationClass = "io.github.michaelnestler.spectral.gradle.GradleSpectralPlugin"
+        tags = listOf("openapi", "swagger", "lint")
     }
 }
 
