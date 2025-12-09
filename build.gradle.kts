@@ -1,7 +1,7 @@
 plugins {
-    kotlin("jvm") version "1.9.22"
-    kotlin("plugin.serialization") version "1.9.22"
-    id("com.gradle.plugin-publish") version "1.2.1"
+    kotlin("jvm") version "2.1.21"
+    kotlin("plugin.serialization") version "2.1.21"
+    id("com.gradle.plugin-publish") version "2.0.0"
     id("fr.brouillard.oss.gradle.jgitver") version "0.9.1"
     id("com.diffplug.spotless") version "6.25.0"
 }
@@ -11,12 +11,12 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
 }
 
 kotlin {
     jvmToolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
+        languageVersion.set(JavaLanguageVersion.of(21))
     }
 }
 

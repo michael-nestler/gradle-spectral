@@ -12,6 +12,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import org.gradle.api.DefaultTask
+import org.gradle.api.GradleException
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
@@ -39,15 +40,13 @@ abstract class SpectralDownloadTask : DefaultTask() {
     @get:OutputFile
     abstract val binary: RegularFileProperty
 
-    private val json by lazy { Json { ignoreUnknownKeys = true } }
-    private val httpClient by lazy {
-        HttpClient.newBuilder().followRedirects(NORMAL).build()
-    }
+    private val json = Json { ignoreUnknownKeys = true }
 
     init {
         outputs.upToDateWhen {
+            val client = createHttpClient()
             if (version.get() == LATEST) {
-                checkLatestUpToDate()
+                checkLatestUpToDate(client)
             } else {
                 checkVersionMatches()
             }
@@ -56,14 +55,15 @@ abstract class SpectralDownloadTask : DefaultTask() {
 
     @TaskAction
     fun downloadSpectral() {
+        val client = createHttpClient()
         try {
-            val release = if (version.get() == LATEST) latestVersion() else fetchRelease(version.get())
+            val release = if (version.get() == LATEST) latestVersion(client) else fetchRelease(client, version.get())
             println("Downloading release ${release.name}")
             val downloadUrl =
                 release.assets.find { matchesOsAndArchitecture(it) }?.browser_download_url
                     ?: throw IllegalStateException("No release asset ${release.name}/${osAssetName()}/${architecture()} found")
             val downloadResponse =
-                httpClient.send(
+                client.send(
                     HttpRequest.newBuilder(URI.create(downloadUrl)).build(),
                     BodyHandlers.ofFile(binary.get().asFile.toPath()),
                 )
@@ -73,7 +73,7 @@ abstract class SpectralDownloadTask : DefaultTask() {
             }
             println("Downloaded binary to ${downloadResponse.body()}")
         } catch (exception: Exception) {
-            exception.printStackTrace()
+            throw GradleException("Failed to download Spectral", exception)
         }
     }
 
@@ -97,10 +97,10 @@ abstract class SpectralDownloadTask : DefaultTask() {
         }
     }
 
-    private fun checkLatestUpToDate(): Boolean {
+    private fun checkLatestUpToDate(client: HttpClient): Boolean {
         println("Fetching latest version from GitHub...")
         try {
-            val releaseResponse = latestVersion()
+            val releaseResponse = latestVersion(client)
             println("Found latest version ${releaseResponse.name}")
             return checkVersionMatches(releaseResponse.name)
         } catch (exception: Exception) {
@@ -143,9 +143,9 @@ abstract class SpectralDownloadTask : DefaultTask() {
         }
     }
 
-    private fun latestVersion(): ReleaseResponse {
+    private fun latestVersion(client: HttpClient): ReleaseResponse {
         val response =
-            httpClient.send(
+            client.send(
                 HttpRequest.newBuilder(URI.create("https://api.github.com/repos/stoplightio/spectral/releases/latest"))
                     .build(),
                 BodyHandlers.ofString(),
@@ -153,9 +153,12 @@ abstract class SpectralDownloadTask : DefaultTask() {
         return json.decodeFromString(response.body())
     }
 
-    private fun fetchRelease(version: String): ReleaseResponse {
+    private fun fetchRelease(
+        client: HttpClient,
+        version: String,
+    ): ReleaseResponse {
         val response =
-            httpClient.send(
+            client.send(
                 HttpRequest.newBuilder(URI.create("https://api.github.com/repos/stoplightio/spectral/releases/tags/v${normalize(version)}"))
                     .build(),
                 BodyHandlers.ofString(),
@@ -175,6 +178,10 @@ abstract class SpectralDownloadTask : DefaultTask() {
         val output = process.inputReader().readText()
         val returnCode = process.waitFor()
         return returnCode to output
+    }
+
+    private fun createHttpClient(): HttpClient {
+        return HttpClient.newBuilder().followRedirects(NORMAL).build()
     }
 }
 
